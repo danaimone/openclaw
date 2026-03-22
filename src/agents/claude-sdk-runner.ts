@@ -194,7 +194,7 @@ export async function runClaudeSdkAgent(params: {
 				cwd: workspaceDir,
 				abortController,
 				env: (() => {
-					const env = { ...process.env, IS_SANDBOX: "1" };
+					const env: Record<string, string | undefined> = { ...process.env, IS_SANDBOX: "1" };
 					// Strip API keys so Claude Code uses subscription auth, not credits.
 					delete env.ANTHROPIC_API_KEY;
 					delete env.ANTHROPIC_API_KEY_OLD;
