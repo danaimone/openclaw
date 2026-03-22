@@ -205,6 +205,7 @@ function normalizeClaudeBackendConfig(config: CliBackendConfig): CliBackendConfi
 export function resolveCliBackendIds(cfg?: OpenClawConfig): Set<string> {
   const ids = new Set<string>([
     normalizeBackendKey("claude-cli"),
+    normalizeBackendKey("claude-sdk"),
     normalizeBackendKey("codex-cli"),
   ]);
   const configured = cfg?.agents?.defaults?.cliBackends ?? {};
@@ -222,7 +223,7 @@ export function resolveCliBackendConfig(
   const configured = cfg?.agents?.defaults?.cliBackends ?? {};
   const override = pickBackendConfig(configured, normalized);
 
-  if (normalized === "claude-cli") {
+  if (normalized === "claude-cli" || normalized === "claude-sdk") {
     const merged = mergeBackendConfig(DEFAULT_CLAUDE_BACKEND, override);
     const config = normalizeClaudeBackendConfig(merged);
     const command = config.command?.trim();

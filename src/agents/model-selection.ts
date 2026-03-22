@@ -73,9 +73,13 @@ export {
   normalizeProviderIdForAuth,
 };
 
+export function isClaudeSdkProvider(provider: string): boolean {
+  return normalizeProviderId(provider) === "claude-sdk";
+}
+
 export function isCliProvider(provider: string, cfg?: OpenClawConfig): boolean {
   const normalized = normalizeProviderId(provider);
-  if (normalized === "claude-cli") {
+  if (normalized === "claude-cli" || normalized === "claude-sdk") {
     return true;
   }
   if (normalized === "codex-cli") {

@@ -2,6 +2,8 @@ import type { ImageContent } from "@mariozechner/pi-ai";
 import { resolveHeartbeatPrompt } from "../auto-reply/heartbeat.js";
 import type { ThinkLevel } from "../auto-reply/thinking.js";
 import type { OpenClawConfig } from "../config/config.js";
+import { runClaudeSdkAgent } from "./claude-sdk-runner.js";
+import { isClaudeSdkProvider } from "./model-selection.js";
 import { shouldLogVerbose } from "../globals.js";
 import { isTruthyEnvValue } from "../infra/env.js";
 import { requestHeartbeatNow } from "../infra/heartbeat-wake.js";
@@ -72,6 +74,11 @@ export async function runCliAgent(params: {
   bootstrapPromptWarningSignature?: string;
   images?: ImageContent[];
 }): Promise<EmbeddedPiRunResult> {
+  // Claude Agent SDK path — uses Pro/Max subscription instead of API credits.
+  if (isClaudeSdkProvider(params.provider)) {
+    return runClaudeSdkAgent(params);
+  }
+
   const started = Date.now();
   const workspaceResolution = resolveRunWorkspaceDir({
     workspaceDir: params.workspaceDir,
