@@ -193,6 +193,7 @@ export async function runClaudeSdkAgent(params: {
 				maxTurns: 25,
 				cwd: workspaceDir,
 				abortController,
+				env: { ...process.env, IS_SANDBOX: "1" },
 				stderr: (data: string) => {
 					if (data.trim()) {
 						log.debug(`sdk stderr: ${data.trim()}`);
