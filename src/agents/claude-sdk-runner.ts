@@ -57,7 +57,6 @@ export async function runClaudeSdkAgent(params: {
 	timeoutMs: number;
 	runId: string;
 	extraSystemPrompt?: string;
-	streamParams?: import("./command/types.js").AgentStreamParams;
 	ownerNumbers?: string[];
 	cliSessionId?: string;
 	bootstrapPromptWarningSignaturesSeen?: string[];
@@ -204,7 +203,7 @@ export async function runClaudeSdkAgent(params: {
 		});
 
 		for await (const message of q) {
-			handleSdkMessage(message, params.streamParams, {
+			handleSdkMessage(message, {
 				onSessionId(id) {
 					sdkSessionId = id;
 				},
@@ -295,7 +294,6 @@ type SdkCallbacks = {
 
 function handleSdkMessage(
 	message: SDKMessage,
-	streamParams: import("./command/types.js").AgentStreamParams | undefined,
 	callbacks: SdkCallbacks,
 ): void {
 	switch (message.type) {
@@ -310,11 +308,6 @@ function handleSdkMessage(
 				for (const block of message.message.content) {
 					if ("text" in block && block.text) {
 						callbacks.onText(block.text);
-						// Drive streaming callback if available
-						streamParams?.onBlockReply?.({
-							text: block.text,
-							isComplete: true,
-						});
 					}
 				}
 			}
